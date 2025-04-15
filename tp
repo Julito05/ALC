@@ -1,0 +1,47 @@
+def factorizacion_lu(m):
+    n = len(m)
+    L = np.zeros((n,n)) # arma matriz L con 0
+    U = np.copy(m) # copia de m
+    for i in range(n):
+        if U[i][i] == 0:  # si el valor = 0, busco una fila debajo q no tenga 0 en esa posicion
+            for s in range(i+1,n):
+                if abs(U[s][i])>abs(U[i][i]):
+                    U[[i, s]] = U[[s, i]] # intercambio filas
+                    
+        
+        L[i][i] = 1 # armo la diagonal de L
+        for j in range(i+1,n): # recorro filas debajo de la fila i
+            factor = U[j][i] / U[i][i] # divido para desp restar
+            L[j][i] = factor
+            for k in range(i,n):
+                U[j][k] -= factor * U[i][k]
+    return L, U
+
+A = np.array([[0,2,3],[7,0,2],[2,0,1]]).astype(int)
+#print(factorizacion_lu(A))
+            
+        
+def inversa_L(m):
+    res = np.eye(len(m), k=0)
+    n = len(m)
+    for i in range(n-1):
+        for j in range(i+1,n):
+            factor = m[j][i] / m[i][i]  
+            for k in range(n-1):   
+                m[j][k] -= factor * m[i,k]
+                res[j][k] -= factor * res[i,k]
+    return res   
+
+def inversa_U(m):
+    res = np.eye(len(m), k=0)
+    n = len(m)
+    for i in range(1,n):
+        for j in range(i):
+            factor = m[j][i] / m[i][i]  
+            for k in range(1,n-1):   
+                m[j][k] -= factor * m[i,k]
+                res[j][k] -= factor * res[i,k]    
+    return m
+
+B = np.array([[1,4,3],[0,2,1],[0,0,1]]).astype(int)
+print(inversa_U(B))
